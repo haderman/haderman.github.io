@@ -1,0 +1,26 @@
+{
+  "name": "my-site",
+  "version": "1.0.0",
+  "description": "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "elm-app build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haderman/my-site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haderman/my-site/issues"
+  },
+  "homepage": "https://github.com/haderman/my-site#readme",
+  "devDependencies": {
+    "create-elm-app": "^2.2.3"
+  }
+}
