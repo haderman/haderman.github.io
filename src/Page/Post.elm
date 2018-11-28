@@ -9,6 +9,7 @@ module Page.Post exposing
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Skeleton
 
 
 
@@ -51,12 +52,16 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Skeleton.Details msg
 view model =
-    text <| "Post" ++ model.postID
-    -- viewContent model.title
+    { title = model.title
+    , kids = [ viewContent model.title model.postID ]
+    }
 
 
-viewContent : String -> Html msg
-viewContent title =
-    text title
+viewContent : String -> String -> Html msg
+viewContent title postID =
+    div []
+        [ h1 [] [ text "BLOG!" ]
+        , p [] [ text <| "Post" ++ postID ]
+        ]

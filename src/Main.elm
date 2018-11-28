@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Page.Home as Home
 import Page.Blog as Blog
 import Page.Post as Post
+import Skeleton
 import Url
 import Url.Parser as Parser exposing (Parser, (</>), custom, map, oneOf, s, top)
 
@@ -123,22 +124,13 @@ view model =
             }
 
         Home home ->
-            { title = "Home"
-            , body =
-                [ Html.map HomeMsg (Home.view home) ]
-            }
+            Skeleton.view HomeMsg (Home.view home)
 
         Blog blog ->
-            { title = "Blog"
-            , body =
-                [ Html.map BlogMsg (Blog.view blog) ]
-            }
+            Skeleton.view BlogMsg (Blog.view blog)    
 
         Post post ->
-            { title = "Post"
-            , body =
-                [ Html.map PostMsg (Post.view post) ]
-            }
+            Skeleton.view PostMsg (Post.view post)
 
 
 
