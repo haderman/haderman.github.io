@@ -9,6 +9,7 @@ module Page.Blog exposing
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Skeleton
 
 
 
@@ -43,12 +44,16 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Skeleton.Details msg
 view model =
-    text "Blog!"
-    -- viewContent model.title
+    { title = model.title
+    , kids = [ viewContent model.title ]
+    }
 
 
 viewContent : String -> Html msg
 viewContent title =
-    text title
+    div []
+        [ h1 [] [ text "BLOG!" ]
+        , p [] [ text "Lista de blogs" ]
+        ]

@@ -9,7 +9,7 @@ module Page.Home exposing
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-
+import Skeleton
 
 
 -- MODEL
@@ -43,12 +43,16 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Skeleton.Details msg
 view model =
-    text "Home!"
-    -- viewContent model.title
+    { title = model.title
+    , kids = [ viewContent model.title ]
+    }
 
 
 viewContent : String -> Html msg
 viewContent title =
-    text title
+    div []
+        [ h1 [] [ text "HOME!" ]
+        , p [] [ text "hola ome" ]
+        ]
