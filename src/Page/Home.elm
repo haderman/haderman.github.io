@@ -37,7 +37,7 @@ init value title =
                     Me name description      
             
                 Err err ->
-                    Me "" <| Debug.toString value
+                    Me "" ""
                     
     in
         ( Model title me, Cmd.none )
