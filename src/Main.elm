@@ -5,16 +5,16 @@ import Html.Attributes exposing (..)
 import Page.Home as Home
 import Page.Blog as Blog
 import Page.Post as Post
-import Skeleton
+import Skeleton exposing (..)
+import Json.Decode exposing (Value)
 import Url
 import Url.Parser as Parser exposing (Parser, (</>), custom, map, oneOf, s, top)
-
+ 
 
 
 -- MAIN
+ 
 
-
-main : Program () Model Msg
 main =
     Browser.application
         { init = init
@@ -28,11 +28,16 @@ main =
 
 
 -- MODEL
+ 
+
+type alias Flags
+    = Json.Decode.Value
 
 
 type alias Model =
     { key : Nav.Key
     , page : Page
+    , flags : Json.Decode.Value
     }
 
 
@@ -43,12 +48,13 @@ type Page
     | Post Post.Model
 
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ url key =
-  stepUrl url
-    { key = key
-    , page = NotFound
-    }
+init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url key =
+    stepUrl url
+        { key = key
+        , page = NotFound
+        , flags = flags
+        }
 
 
 
@@ -124,13 +130,13 @@ view model =
             }
 
         Home home ->
-            Skeleton.view HomeMsg (Home.view home)
+            Skeleton.view Skeleton.Home HomeMsg (Home.view home)
 
         Blog blog ->
-            Skeleton.view BlogMsg (Blog.view blog)    
+            Skeleton.view Skeleton.Blog BlogMsg (Blog.view blog)    
 
         Post post ->
-            Skeleton.view PostMsg (Post.view post)
+            Skeleton.view Skeleton.Post PostMsg (Post.view post)
 
 
 
@@ -143,10 +149,10 @@ stepUrl url model =
         parser =
             oneOf
                 [ route top
-                    ( stepHome model (Home.init "Home")
+                    ( stepHome model (Home.init model.flags "Home")
                     )
                 , route (s "blog" )
-                    ( stepBlog model (Blog.init "Blog")
+                    ( stepBlog model (Blog.init  "Blog")
                     )
                 , route (s "blog" </> post_)
                     (\post ->

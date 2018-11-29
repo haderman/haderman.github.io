@@ -7,8 +7,9 @@ module Page.Post exposing
   )
 
 
-import Html exposing (..)
+import Html exposing (Html, h1, div, p, text)
 import Html.Attributes exposing (..)
+import Element exposing (Element)
 import Skeleton
 
 
@@ -59,9 +60,10 @@ view model =
     }
 
 
-viewContent : String -> String -> Html msg
+viewContent : String -> String -> Element msg
 viewContent title postID =
-    div []
-        [ h1 [] [ text "BLOG!" ]
-        , p [] [ text <| "Post" ++ postID ]
-        ]
+    Element.html <|
+        div []
+            [ h1 [] [ text "BLOG!" ]
+            , p [] [ text <| "Post" ++ postID ]
+            ]

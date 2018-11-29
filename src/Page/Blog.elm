@@ -7,8 +7,8 @@ module Page.Blog exposing
   )
 
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Element exposing (..)
+import Element.Border as Border
 import Skeleton
 
 
@@ -51,9 +51,16 @@ view model =
     }
 
 
-viewContent : String -> Html msg
+viewContent : String -> Element msg
 viewContent title =
-    div []
-        [ h1 [] [ text "BLOG!" ]
-        , p [] [ text "Lista de blogs" ]
+    column
+        [ centerX
+        , padding 20
+        , spacingXY 0 20
+        , Border.width 1
+        , Border.rounded 4
+        , Border.color <| rgb255 240 240 240
+        ]
+        [ row [ centerX ] [ text "BLOG PAGE" ]
+        , row [ centerX ] [ text "En construccion" ]
         ]
