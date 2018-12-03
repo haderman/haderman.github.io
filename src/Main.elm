@@ -9,7 +9,7 @@ import Skeleton exposing (..)
 import Json.Decode exposing (Value)
 import Url
 import Url.Parser as Parser exposing (Parser, (</>), custom, map, oneOf, s, top)
- 
+
 
 
 -- MAIN
