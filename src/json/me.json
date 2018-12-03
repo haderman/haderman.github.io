@@ -1,4 +1,11 @@
 {
-  "name": "Personal site",
-  "description": "En construccion"
+  "name": "Hader Cardona",
+  "photo": "profile.jpeg",
+  "tags": [
+    "React",
+    "Redux",
+    "Html",
+    "Css"
+  ],
+  "description": "Soy **Hader Cardona**, Frontend developer con pasión y más de 2 años de experiencia.\n\nConstantemente estoy trabajando en mejorarme, me gustan los retos, sueño con aprender y hacer programación funcional profesionalmente.\n\nSi quieres saber mas de mi [contáctame!](mailto:cardona.hader@mail.com)"
 }

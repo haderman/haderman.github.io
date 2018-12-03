@@ -1,4 +1,4 @@
-module Href exposing
+module Utils.Href exposing
   ( toHome
   , toBlog
   , toPost

@@ -9,8 +9,11 @@ module Page.Home exposing
 
 import Element exposing (..)
 import Element.Border as Border
+import Element.Font as Font
+import Element.Background as Background
 import Skeleton
-import Json.Decode exposing (Decoder, Value, fail, field, string)
+import Json.Decode exposing (Decoder, Value, fail, field, string, list)
+import Utils.Markdown as Markdown
 
 
 
@@ -19,6 +22,8 @@ import Json.Decode exposing (Decoder, Value, fail, field, string)
 
 type alias Me =
     { name : String
+    , photo : String
+    , tags : List String
     , description : String
     }
 
@@ -33,14 +38,14 @@ init value title =
     let
         me =
             case Json.Decode.decodeValue meDecoder value of
-                Ok { name, description }  ->
-                    Me name description      
+                Ok { name, photo, tags, description }  ->
+                    Me name photo tags description      
             
                 Err err ->
-                    Me "" ""
+                    Me "" "" [] ""
                     
     in
-        ( Model title me, Cmd.none )
+    ( Model title me, Cmd.none )
    
 
 
@@ -69,16 +74,48 @@ view model =
 
 viewContent : String -> Me -> Element msg
 viewContent title me =
+    let
+        name =
+            paragraph [ centerX, Font.size 24, Font.bold ] [ text me.name ]
+
+        tagsPanel =
+            let
+                chip txt =
+                    el
+                        [ padding 4
+                        , Font.size 16
+                        , Border.rounded 4
+                        , Background.color <| rgb255 200 200 200
+                        ]
+                        (text txt)  
+            in
+            row [ spacing 5, centerX ] <| List.map chip me.tags
+
+        photo =
+            image
+                [ width <| px 128
+                , Border.rounded 100
+                , clip
+                , centerX
+                ]
+                { src = me.photo
+                , description = ""
+                }
+
+        description =
+            paragraph [ centerX, Font.size 20]
+                [ Element.html <| Markdown.block me.description ]
+                
+    in
     column
         [ centerX
+        , width (fill |> maximum 600)
         , padding 20
-        , spacingXY 0 20
-        , Border.width 1
-        , Border.rounded 4
-        , Border.color <| rgb255 240 240 240
+        , spacingXY 0 30
         ]
-        [ row [ centerX ] [ text me.name ]
-        , row [ centerX ] [ text me.description ]
+        [ tagsPanel
+        , photo
+        , description
         ]
 
 
@@ -88,8 +125,10 @@ viewContent title me =
 
 meDecoder : Decoder Me
 meDecoder =
-    Json.Decode.field "me" <|
-        Json.Decode.map2 Me
-            (Json.Decode.field "name" Json.Decode.string)
-            (Json.Decode.field "description" Json.Decode.string)
+    field "me" <|
+        Json.Decode.map4 Me
+            (field "name" string)
+            (field "photo" string)
+            (field "tags" <| list string)
+            (field "description" string)
 

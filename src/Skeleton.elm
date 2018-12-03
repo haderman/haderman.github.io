@@ -7,7 +7,7 @@ module Skeleton exposing
 
 import Browser
 import Html exposing (Html, div)
-import Href
+import Utils.Href as Href
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -42,13 +42,12 @@ view page toMsg details =
     { title =
         details.title
     , body =
-        [ layout [] <|
+        [ layout [ Font.color (rgb255 65 74 76) ] <|
             column
                 [ width fill
                 , height fill
                 ]
-                [ viewHeader page
-                , Element.map toMsg <| viewContent details.kids
+                [ Element.map toMsg <| viewContent details.kids
                 , viewFooter
                 ]
         ]
@@ -77,7 +76,8 @@ viewHeader page =
     row
         [ width fill
         , height <| px 60
-        , Background.color <| rgb255 250 250 250
+        , Border.widthEach { top = 0, bottom = 1, left = 0, right = 0 }
+        , Border.color <| rgb255 234 234 234
         , spacingXY 10 0
         , Font.size 18
         ]
@@ -91,7 +91,7 @@ viewHeader page =
 
 viewContent : List (Element msg) -> Element msg
 viewContent kids =
-    column [ height fill, width fill, padding 40 ]
+    column [ height fill, width fill, padding 10 ]
         kids
 
 
@@ -111,13 +111,14 @@ viewFooter =
         [ width fill
         , alignBottom
         , padding 5
-        , Background.color <| rgb255 150 150 150
+        , Border.widthEach { top = 1, bottom = 0, left = 0, right = 0 }
+        , Border.color <| rgb255 234 234 234
         ]
         [ paragraph
             [ centerX
             , Font.size 14
             ] 
-            [ text "All code for this site is open source and written in Elm. "
+            [ text "All code for this site is open source and with ♥. "
             , linkRepo
             , text "! — © 2018-present Hader Cardona"
             ]

@@ -13,7 +13,7 @@ import Url.Parser as Parser exposing (Parser, (</>), custom, map, oneOf, s, top)
 
 
 -- MAIN
- 
+
 
 main =
     Browser.application
