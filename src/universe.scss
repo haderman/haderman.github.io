@@ -1,3 +1,5 @@
+$breakpoint-phone: 640px;
+
 .sky {
   height: 100vh;
   width: 100%;
@@ -17,12 +19,16 @@ $bxshadow-large: box-shadow(300);
 $bxshadow-medium: box-shadow(500);
 $bxshadow-small: box-shadow(800);
 
+.stars {
+	border-radius: 50%;
+}
+
 .stars.large {
 	height: 3px;
 	width: 3px;
 	background: transparent;
 	box-shadow: $bxshadow-large;
-	animation: blink-large 7s infinite;
+	// animation: blink-large 7s infinite;
 }
 
 .stars.medium {
@@ -30,7 +36,7 @@ $bxshadow-small: box-shadow(800);
 	width: 2px;
 	background: transparent;
 	box-shadow: $bxshadow-medium;
-	animation: blink-medium 5s infinite;
+	// animation: blink-medium 5s infinite;
 }
 
 .stars.small {
@@ -38,7 +44,7 @@ $bxshadow-small: box-shadow(800);
 	width: 1px;
 	background: transparent;
 	box-shadow: $bxshadow-small;
-	animation: blink-small 3s infinite;
+	// animation: blink-small 3s infinite;
 }
 
 @keyframes blink-large {
@@ -122,14 +128,22 @@ svg circle {
 
 .clouds {
   background: url(imgs/clouds.png) repeat-x;
-  width: calc(100% - 25px);
-	height: calc(100% - 22px);
+  width: 6em;
+	height: 6em;
 	position: absolute;
 	top: 8px;
-	left: 9px;
+	left: 8px;
   border-radius: 50%;
   animation: translateBackground 60s infinite linear;
-  opacity: 0.7;
+	opacity: 0.7;
+	
+	@media (max-width: $breakpoint-phone) {
+		width: 4.3em;
+    height: 4.4em;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+	}
 }
 
 @keyframes translateBackground{
@@ -142,9 +156,15 @@ svg circle {
 }
 
 .planet {
-  width: 180px;
-	height: 180px;
+	width: 7em;
+	height: 7em;
 	position: relative;
+	cursor: url(imgs/ovni.png), auto;
+
+	@media (max-width: $breakpoint-phone) {
+		width: 5em;
+		height: 5em;
+	}
 }
 
 .planet circle {
@@ -157,30 +177,40 @@ svg circle {
   stroke-width: 1px;
 }
 
-.planet-A {
-  -webkit-filter: drop-shadow(0 0 0.75rem cyan); 
-	filter: drop-shadow(0 0 0.75rem cyan);
+.planet-about {
+	top: 50px;
+	left: 50px;
+
+	svg {
+		-webkit-filter: drop-shadow(0 0 0.75rem cyan); 
+		filter: drop-shadow(0 0 0.75rem cyan);
+	}
+
+	circle {
+		fill: #18DCFF;
+	}
+
+	polygon {
+		fill: #3AEA74; 
+	}	
 }
 
-.planet-A circle {
-  fill: #18DCFF;
-}
+.planet-experience {
+	top: 250px;
+	left: 50px;
 
-.planet-A polygon {
-  fill: #3AEA74; 
-}
+  svg {
+		-webkit-filter: drop-shadow(0 0 0.75rem orange); 
+  	filter: drop-shadow(0 0 0.75rem orange);
+	}
 
-.planet-B {
-  -webkit-filter: drop-shadow(0 0 0.75rem red); 
-  filter: drop-shadow(0 0 0.75rem red);
-}
+	circle {
+		fill: #FFA502;
+	}
 
-.planet-B circle {
-  fill: #FFA502;
-}
-
-.planet-B polygon {
-  fill: #FF6348; 
+	polygon {
+		fill: #FF6348; 
+	}
 }
 
 .planet-C {

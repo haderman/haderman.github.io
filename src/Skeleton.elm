@@ -50,11 +50,16 @@ view page toMsg details =
             column
                 [ width fill
                 , height fill
-                ]
-                [ viewHeader page
-                , Element.map toMsg <| viewContent details.kids
-                , viewFooter
-                ]
+                ] <|
+                case page of
+                    Home ->
+                       [ Element.map toMsg <| viewContent details.kids ] 
+                
+                    _ ->
+                        [ viewHeader page
+                        , Element.map toMsg <| viewContent details.kids
+                        , viewFooter
+                        ]
         ]
     }
 
