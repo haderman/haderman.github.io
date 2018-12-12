@@ -2,14 +2,18 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Page.Home as Home
-import Page.Blog as Blog
-import Page.Post as Post
-import Skeleton exposing (..)
 import Json.Decode exposing (Value)
 import Url
 import Url.Parser as Parser exposing (Parser, (</>), custom, map, oneOf, s, top)
 
+
+-- PROJECT IMPORTS
+
+import Page.Home as Home
+import Page.About as About
+import Page.Blog as Blog
+import Page.Post as Post
+import Skeleton exposing (..)
 
 
 -- MAIN
@@ -44,6 +48,7 @@ type alias Model =
 type Page
     = NotFound
     | Home Home.Model
+    | About About.Model
     | Blog Blog.Model
     | Post Post.Model
 
@@ -65,13 +70,14 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | HomeMsg Home.Msg
+    | AboutMsg About.Msg
     | BlogMsg Blog.Msg
     | PostMsg Post.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
+update message model =
+    case message of
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
@@ -83,6 +89,11 @@ update msg model =
         UrlChanged url ->
             stepUrl url model
 
+        HomeMsg msg ->
+            case model.page of
+                Home home -> stepHome model (Home.update msg home)
+                _         -> ( model, Cmd.none )    
+
         _ ->
             ( model, Cmd.none )
 
@@ -91,6 +102,13 @@ stepHome : Model -> ( Home.Model, Cmd Home.Msg ) -> ( Model, Cmd Msg )
 stepHome model (home, cmds) =
     ( { model | page = Home home }
     , Cmd.map HomeMsg cmds
+    )
+
+
+stepAbout : Model -> ( About.Model, Cmd About.Msg ) -> ( Model, Cmd Msg )
+stepAbout model (about, cmds) =
+    ( { model | page = About about }
+    , Cmd.map AboutMsg cmds
     )
 
 
@@ -108,12 +126,19 @@ stepPost model (post, cmds) =
     )
 
 
+
 -- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions model =
+    case model.page of
+        Home home ->
+            Sub.map HomeMsg (Home.subscriptions home)
+    
+        _ ->
+            Sub.none
+                
 
 
 
@@ -132,6 +157,9 @@ view model =
         Home home ->
             Skeleton.view Skeleton.Home HomeMsg (Home.view home)
 
+        About about ->
+            Skeleton.view Skeleton.About AboutMsg (About.view about)
+
         Blog blog ->
             Skeleton.view Skeleton.Blog BlogMsg (Blog.view blog)    
 
@@ -149,7 +177,10 @@ stepUrl url model =
         parser =
             oneOf
                 [ route top
-                    ( stepHome model (Home.init model.flags "Home")
+                    ( stepHome model (Home.init "Home")
+                    )
+                , route (s "about" )
+                    ( stepAbout model (About.init model.flags "About")
                     )
                 , route (s "blog" )
                     ( stepBlog model (Blog.init  "Blog")

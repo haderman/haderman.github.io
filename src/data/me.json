@@ -3,9 +3,12 @@
   "photo": "profile.jpeg",
   "tags": [
     "React",
+    "React Native",
     "Redux",
     "Html",
-    "Css"
+    "Css",
+    "Testing",
+    "Electron"
   ],
   "description": "Soy **Hader Cardona**, Frontend developer con pasión y 3 años de experiencia.\n\nConstantemente estoy trabajando en mejorarme, me gustan los retos, sueño con aprender y hacer programación funcional profesionalmente.\n\nSi quieres saber más de mi [contáctame!](mailto:cardona.hader@mail.com)"
 }

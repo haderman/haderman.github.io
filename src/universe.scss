@@ -1,0 +1,211 @@
+.sky {
+  height: 100vh;
+  width: 100%;
+  background: rgb(9,76,114);
+  background: radial-gradient(ellipse at bottom,  rgb(9,16,44) 0%,rgb(1,41,63) 100%);
+}
+
+@function box-shadow($stars) {
+	$bxshadow: ();
+	@for $i from 1 to $stars {
+		$bxshadow: append($bxshadow, (random(2000) + 0px) (random(2000) + 0px) #fff, comma);
+	}
+	@return unquote($bxshadow);
+}
+
+$bxshadow-large: box-shadow(300);
+$bxshadow-medium: box-shadow(500);
+$bxshadow-small: box-shadow(800);
+
+.stars.large {
+	height: 3px;
+	width: 3px;
+	background: transparent;
+	box-shadow: $bxshadow-large;
+	animation: blink-large 7s infinite;
+}
+
+.stars.medium {
+	height: 2px;
+	width: 2px;
+	background: transparent;
+	box-shadow: $bxshadow-medium;
+	animation: blink-medium 5s infinite;
+}
+
+.stars.small {
+	height: 1px;
+	width: 1px;
+	background: transparent;
+	box-shadow: $bxshadow-small;
+	animation: blink-small 3s infinite;
+}
+
+@keyframes blink-large {
+	0% {
+		box-shadow: $bxshadow-large;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-large;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-large;
+	}
+}
+
+@keyframes blink-medium {
+	0% {
+		box-shadow: $bxshadow-medium;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-medium;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-medium;
+	}
+}
+
+@keyframes blink-small {
+	0% {
+		box-shadow: $bxshadow-small;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-small;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-small;
+	}
+}
+
+
+.planets-container {
+	position: relative;
+	display: flex;
+}
+
+/* from codepen */
+
+svg polyline,
+svg line,
+svg path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 0.2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: 0.2s;
+}
+
+svg circle {
+  fill: #18DCFF;
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.clouds {
+  background: url(imgs/clouds.png) repeat-x;
+  width: 170px;
+  height: 170px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border-radius: 50%;
+  animation: translateBackground 60s infinite linear;
+  opacity: 0.7;
+}
+
+@keyframes translateBackground{
+  0%{
+    background-position-x:0;
+  }
+  100%{
+    background-position-x:-600px;
+  }
+}
+
+.planet {
+  width: 200px;
+	height: 200px;
+	position: relative;
+}
+
+.planet circle {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.planet polygon {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.planet-A {
+  -webkit-filter: drop-shadow(0 0 0.75rem cyan); 
+	filter: drop-shadow(0 0 0.75rem cyan);
+}
+
+.planet-A circle {
+  fill: #18DCFF;
+}
+
+.planet-A polygon {
+  fill: #3AEA74; 
+}
+
+.planet-B {
+  -webkit-filter: drop-shadow(0 0 0.75rem red); 
+  filter: drop-shadow(0 0 0.75rem red);
+}
+
+.planet-B circle {
+  fill: #FFA502;
+}
+
+.planet-B polygon {
+  fill: #FF6348; 
+}
+
+.planet-C {
+  -webkit-filter: drop-shadow(0 0 0.75rem purple); 
+  filter: drop-shadow(0 0 0.75rem purple);
+}
+
+.planet-C circle {
+  fill: #0a3d62;
+}
+
+.planet-C polygon {
+  fill: #0a3d62; 
+}
+
+.planet-D {
+  -webkit-filter: drop-shadow(0 0 0.75rem green); 
+  filter: drop-shadow(0 0 0.75rem green);
+}
+
+.planet-D circle {
+  fill: #4a69bd;
+}
+
+.planet-D polygon {
+  fill: #6a89cc; 
+}
+

@@ -7,7 +7,6 @@ module Skeleton exposing
 
 import Browser
 import Html exposing (Html, div)
-import Utils.Href as Href
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -16,9 +15,14 @@ import Element.Font as Font
 import Element.Input as Input
 
 
+-- PROJECT IMPORTS
+
+import Utils.Href as Href
+
 
 type Page
-    = Home
+    = About
+    | Home
     | Blog
     | Post
 
@@ -47,7 +51,8 @@ view page toMsg details =
                 [ width fill
                 , height fill
                 ]
-                [ Element.map toMsg <| viewContent details.kids
+                [ viewHeader page
+                , Element.map toMsg <| viewContent details.kids
                 , viewFooter
                 ]
         ]
@@ -82,7 +87,7 @@ viewHeader page =
         , Font.size 18
         ]
         [ navLink Href.toHome "Home" <| isActive page Home
-        , navLink Href.toBlog "Blog" <| isActive page Blog
+        , navLink Href.toAbout "About" <| isActive page About
         ]
 
 
@@ -91,7 +96,7 @@ viewHeader page =
 
 viewContent : List (Element msg) -> Element msg
 viewContent kids =
-    column [ height fill, width fill, padding 10 ]
+    column [ height fill, width fill ]
         kids
 
 

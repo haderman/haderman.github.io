@@ -4,6 +4,8 @@ module Utils.Href exposing
   , toPost
   , toTwitter
   , toGithub
+  , toAbout
+  , toCodepen
   )
 
 
@@ -24,6 +26,11 @@ toBlog =
     Url.absolute [ "blog" ] []
 
 
+toAbout : String
+toAbout =
+    Url.absolute [ "about" ] []
+
+
 toPost : Int -> String
 toPost post_ =
     Url.absolute [ "blog", String.fromInt post_ ] []
@@ -37,3 +44,8 @@ toGithub =
 toTwitter : String
 toTwitter =
     "https://twitter.com/haderman7"
+
+
+toCodepen : String
+toCodepen =
+    "https://codepen.io/haderman"

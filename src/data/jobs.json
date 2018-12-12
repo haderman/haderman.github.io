@@ -1,0 +1,46 @@
+[
+  {
+    "started_at": "Nov. 2015",
+    "finished_at": "Abr. 2016",
+    "client": "Brainz",
+    "position": "Unity Developer Junior",
+    "responsabilities": [
+      "Developer in Brainztorm SDK team"
+    ],
+    "tags": [
+      "Unity",
+      "C# Script"
+    ]
+  },
+  {
+    "started_at": "Jun. 2016",
+    "finished_at": "Sep. 2016",
+    "client": "Organización Equitel",
+    "position": "Front-end Developer",
+    "responsabilities": [
+      "Ayudar al equipo en desarrollo de modulos para la plataforma Artimo",
+      "Creación de componentes React"
+    ],
+    "tags": [
+      "Javascript",
+      "React",
+      "Meteor"
+    ]
+  },
+  {
+    "started_at": "Oct. 2016",
+    "finished_at": "Oct. 2086",
+    "client": "Firebase S.A.S",
+    "position": "Frontend Developer",
+    "responsabilities": [
+      "Creación de UI",
+      "Diseño de la aplicación"
+    ],
+    "tags": [
+      "React",
+      "Redux",
+      "Electron",
+      "Testing"
+    ]
+  }
+]
