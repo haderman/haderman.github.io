@@ -15,9 +15,9 @@ $breakpoint-phone: 640px;
 	@return unquote($bxshadow);
 }
 
-$bxshadow-large: box-shadow(300);
-$bxshadow-medium: box-shadow(500);
-$bxshadow-small: box-shadow(800);
+$bxshadow-large: box-shadow(50);
+$bxshadow-medium: box-shadow(200);
+$bxshadow-small: box-shadow(1000);
 
 .stars {
 	border-radius: 50%;
@@ -28,7 +28,7 @@ $bxshadow-small: box-shadow(800);
 	width: 3px;
 	background: transparent;
 	box-shadow: $bxshadow-large;
-	animation: blink-large 7s infinite;
+	// animation: blink-large 5s infinite 10s;
 }
 
 .stars.medium {
@@ -36,7 +36,7 @@ $bxshadow-small: box-shadow(800);
 	width: 2px;
 	background: transparent;
 	box-shadow: $bxshadow-medium;
-	animation: blink-medium 5s infinite;
+	// animation: blink-medium 10s infinite;
 }
 
 .stars.small {
@@ -44,14 +44,14 @@ $bxshadow-small: box-shadow(800);
 	width: 1px;
 	background: transparent;
 	box-shadow: $bxshadow-small;
-	animation: blink-small 3s infinite;
+	// animation: blink-small 13s infinite;
 }
 
 @keyframes blink-large {
 	0% {
 		box-shadow: $bxshadow-large;
 	}	
-	70% {
+	20% {
 		$colors: '#fff', 'transparent';
 		$stars: $bxshadow-large;
 		@for $i from 1 to length($stars) {
@@ -60,7 +60,7 @@ $bxshadow-small: box-shadow(800);
 		}
 		box-shadow: $stars;
 	}
-	100% {
+	40%, 100% {
 		box-shadow: $bxshadow-large;
 	}
 }
@@ -69,7 +69,7 @@ $bxshadow-small: box-shadow(800);
 	0% {
 		box-shadow: $bxshadow-medium;
 	}	
-	70% {
+	20% {
 		$colors: '#fff', 'transparent';
 		$stars: $bxshadow-medium;
 		@for $i from 1 to length($stars) {
@@ -78,7 +78,7 @@ $bxshadow-small: box-shadow(800);
 		}
 		box-shadow: $stars;
 	}
-	100% {
+	40%, 100% {
 		box-shadow: $bxshadow-medium;
 	}
 }
@@ -87,7 +87,7 @@ $bxshadow-small: box-shadow(800);
 	0% {
 		box-shadow: $bxshadow-small;
 	}	
-	70% {
+	20% {
 		$colors: '#fff', 'transparent';
 		$stars: $bxshadow-small;
 		@for $i from 1 to length($stars) {
@@ -96,7 +96,7 @@ $bxshadow-small: box-shadow(800);
 		}
 		box-shadow: $stars;
 	}
-	100% {
+	40%, 100% {
 		box-shadow: $bxshadow-small;
 	}
 }
@@ -134,7 +134,7 @@ svg circle {
 	top: 8px;
 	left: 8px;
   border-radius: 50%;
-  animation: translateBackground 60s infinite linear;
+  // animation: translateBackground 60s infinite linear;
 	opacity: 0.7;
 	
 	@media (max-width: $breakpoint-phone) {
