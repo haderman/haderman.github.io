@@ -1,5 +1,5 @@
 [build]
-  command = "npm i elm && npm i elm-live && elm-live src/Main.elm -u -- --output=src/elm.js && npm run build"
+  command = "npm i elm && elm make src/Main.elm --output=src/elm.js && npm run build"
   publish = "dist"
 
 [[redirects]]
