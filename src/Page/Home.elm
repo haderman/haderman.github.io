@@ -7,15 +7,17 @@ module Page.Home exposing
   , subscriptions
   )
 
-import Html exposing (Html, div, a)
-import Html.Attributes exposing (class, href)
-import Element exposing (..)
-import Element.Events exposing (onClick)
-import Element.Border as Border
-import Keyboard exposing (RawKey, Key(..))
-import Keyboard.Arrows exposing (arrowKey)
+
+import Time exposing (millisToPosix)
+import Animation exposing (px, em, percent)
+import Animation.Messenger
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Element exposing (Element, html)
 import Svg exposing (svg, rect, circle, path, polygon)
 import Svg.Attributes exposing (..)
+import Json.Decode as Decode exposing (Decoder, Value, map2, fail, field, float)
 
 
 -- PROJECT IMPORTS
@@ -28,42 +30,58 @@ import Utils.Href exposing (toAbout)
 -- MODEL
 
 
+type alias Screen =
+    { width : Float  
+    , height : Float
+    }
+
 
 type alias Model =
     { title : String
-    , x : Float
-    , y : Float
-    , vx : Float
-    , vy : Float
-    , dir : Direction
-    , keys : Keys
+    , style : Animation.Messenger.State Msg
+    , screen : Screen
+    , place : Place
+    , sky : Animation.State
     }
 
 
-type Direction
-    = Left
-    | Right
+type Place
+    = Universe
+    | Planet
 
 
-type alias Keys =
-    { x : Int, y : Int }
 
-
-initModel : String -> Model
-initModel title =
+initModel : String -> Screen -> Model
+initModel title screen =
     { title = title
-    , x = 0
-    , y = 0
-    , vx = 0
-    , vy = 0
-    , dir = Right
-    , keys = { x = 0, y = 0 }
+    , style =
+        Animation.style
+            [ Animation.opacity 1.0
+            , Animation.width (px 140)
+            , Animation.translate (px 0) (px 0)
+            ]
+    , screen = screen
+    , place = Universe
+    , sky =
+        Animation.style
+            [ Animation.backgroundColor { red = 0, green = 0, blue = 0, alpha = 1.0 }
+            ]
     }
 
 
-init : String -> ( Model, Cmd Msg )
-init title =
-    ( initModel title
+init : Decode.Value -> String -> ( Model, Cmd Msg )
+init value title =
+    let
+        screen =
+            case Decode.decodeValue screenDecoder value of
+                Ok screen_  ->
+                    screen_
+            
+                Err err ->
+                    Screen 800 800
+
+    in
+    ( initModel title screen
     , Cmd.none
     )
 
@@ -73,29 +91,76 @@ init title =
 
 
 type Msg
-    = KeyboardMsg Keyboard.Msg
-    | KeyDown RawKey
-    | KeyUp RawKey
-    | ClearKeys
-    | Noop
-    | Click
+    = ChangePlace Place
+    | OnPlace Place
+    | Animate Animation.Msg
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Click ->
-            let
-                dir =
-                    case model.dir of
-                        Left  -> Right
-                        Right -> Left
-                                
-            in
-            ( { model | dir = dir }, Cmd.none )
+        ChangePlace place ->
+            ({ model
+                | style =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ Animation.width (px <| model.screen.width * 3)
+                            , Animation.translate
+                                (px <| model.screen.width * -1)
+                                (px <| model.screen.height - model.screen.height * 0.4)
+                            , Animation.opacity 0.5
+                            ]
+                        -- , Animation.wait (millisToPosix 4000)
+                        , Animation.Messenger.send (OnPlace place)
+                        -- , Animation.to
+                        --     [ Animation.width (px 140)
+                        --     ]
+                        ]
+                        model.style
 
-        _ ->
-            ( model, Cmd.none )
+                , sky =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ skyColor Planet ]
+                        ]
+                        model.sky
+            }
+            , Cmd.none
+            )
+
+        OnPlace place ->
+            ({ model
+                | place = Planet
+            }
+            , Cmd.none
+            )
+
+        Animate animMsg ->
+            let
+                ( newStyle, cmd ) =
+                    Animation.Messenger.update animMsg model.style
+
+                newSky =
+                    Animation.update animMsg model.sky
+            in
+            ( { model
+                | style = newStyle
+                , sky = newSky
+              }
+            , cmd
+            )
+
+
+
+
+skyColor : Place -> Animation.Property
+skyColor place =
+    case place of
+        Universe ->
+            Animation.backgroundColor { red = 0, green = 0, blue = 0, alpha = 1.0 }
+    
+        Planet ->
+            Animation.backgroundColor { red = 0, green = 180, blue = 255, alpha = 1.0 }
 
 
 
@@ -105,10 +170,10 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Keyboard.downs KeyDown
-        , Keyboard.ups KeyUp
-        , Sub.map KeyboardMsg Keyboard.subscriptions
+        [ Animation.subscription Animate [ model.style ]
+        , Animation.subscription Animate [ model.sky ]
         ]
+    -- Animation.subscription Animate [ model.style ]
 
 
 
@@ -125,10 +190,53 @@ view model =
 viewContent : Model -> Element Msg
 viewContent model =
     Element.html <|
-        div [ Html.Attributes.class "sky" ]
-            [ viewStars
-            , viewPlanets
+        div
+            (Animation.render model.sky
+                ++ [ Html.Attributes.class "sky" ]
+            )
+            [ viewSky model.place
+            , viewPlace model
             ]
+
+
+viewPlace : Model -> Html Msg
+viewPlace model =
+    case model.place of
+        Universe ->
+            viewPlanets model
+    
+        Planet ->
+            viewPlanets model
+
+
+viewSky : Place -> Html Msg
+viewSky place =
+    case place of
+        Universe ->
+            div [ Html.Attributes.class "absolute" ]
+                [ div [ Html.Attributes.class "stars small" ] []
+                , div [ Html.Attributes.class "stars medium" ] []
+                , div [ Html.Attributes.class "stars large" ] []
+                ]
+    
+        Planet ->
+            div [ Html.Attributes.class "background" ]
+                [ div [ Html.Attributes.class "x1" ]
+                    [ div [ Html.Attributes.class "cloud" ] []
+                    ]
+                , div [ Html.Attributes.class "x2" ]
+                    [ div [ Html.Attributes.class "cloud" ] []
+                    ]
+                , div [ Html.Attributes.class "x3" ]
+                    [ div [ Html.Attributes.class "cloud" ] []
+                    ]
+                , div [ Html.Attributes.class "x4" ]
+                    [ div [ Html.Attributes.class "cloud" ] []
+                    ]
+                , div [ Html.Attributes.class "x5" ]
+                    [ div [ Html.Attributes.class "cloud" ] []
+                    ]
+                ]
 
 
 viewStars : Html Msg
@@ -140,11 +248,50 @@ viewStars =
         ]
 
 
-viewPlanets : Html Msg
-viewPlanets =
+viewPlanets : Model -> Html Msg
+viewPlanets model =
     div [ Html.Attributes.class "planets-container" ]
         [ viewAboutPlanet
         , viewExperiencePlanet
+        , viewAnimationPlanet model
+        ]
+
+
+viewAnimationPlanet : Model -> Html Msg
+viewAnimationPlanet model =
+    div
+        (Animation.render model.style
+            ++ [ onClick (ChangePlace Planet)
+               , Html.Attributes.class "planet planet-about"
+               ]
+        )
+        [ svg
+            [ viewBox "0 0 250 250"
+            , Svg.Attributes.class "planet-A"
+            ]
+            [ circle
+                [ cx "121"
+                , cy "121"
+                , r "109"
+                ] []
+            , polygon
+                [ points "38 105 42 110 41 120 44 126 48 126 56 129 59 136 64 136 69 133 72 134 74 139 80 147 86 146 94 138 97 132 106 135 116 135 125 132 141 132 149 136 159 136 159 124 150 117 138 102 138 92 147 84 141 76 131 75 120 72 103 71 89 63 75 66 80 73 88 73 86 79 74 91 60 96 62 91 53 89 41 92 35 97"
+                ]
+                []
+            , polygon
+                [ points "142 159 132 165 132 172 127 172 125 176 129 182 135 182 138 179 146 181 150 181 153 190 161 192 166 191 166 186 162 187 157 187 157 180 159 174 155 167 152 160 143 154 136 154 140 160"
+                ] []
+            , polygon
+                [ points "221 164 226 153 229 139 230 131 231 120 230 104 224 88 219 88 215 89 211 97 217 97 219 91 221 97 223 104 219 106 204 111 204 128 211 134 214 133 214 128 211 123 213 115 223 118 225 132 220 139 218 146 215 154 204 155 196 162 197 176 209 173 216 169"
+                ] []
+            , polygon
+                [ points "99 15 113 12 122 12 139 13 150 16 160 19 172 24 190 35 207 52 199 52 191 60 181 59 171 55 171 52 177 53 177 49 172 40 160 41 149 41 145 46 124 45 112 49 98 46 94 53 90 52 90 44 97 38 111 36 121 37 127 32 134 29 125 19 103 19 88 25 74 30 64 36 60 57 51 61 39 58 31 67 27 64 37 49 53 34 75 21 96 14"
+                ] []
+            , polygon
+                [ points "33 188 45 190 53 185 55 175 61 168 68 168 81 165 78 175 73 177 73 185 74 203 70 207 72 214 72 218 59 212 44 201"
+                ] []
+            ]
+        , viewClouds
         ]
 
 
@@ -211,3 +358,14 @@ viewExperiencePlanet =
 viewClouds : Html Msg
 viewClouds =
     div [ Html.Attributes.class "clouds" ] []
+
+
+
+-- DECODERS
+
+screenDecoder : Decoder Screen
+screenDecoder =
+    field "screen" <|
+        Decode.map2 Screen
+            (field "width" float)
+            (field "height" float)

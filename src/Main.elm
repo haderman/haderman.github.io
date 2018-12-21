@@ -177,7 +177,7 @@ stepUrl url model =
         parser =
             oneOf
                 [ route top
-                    ( stepHome model (Home.init "Home")
+                    ( stepHome model (Home.init model.flags "Home")
                     )
                 , route (s "about" )
                     ( stepAbout model (About.init model.flags "About")

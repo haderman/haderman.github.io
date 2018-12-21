@@ -3,8 +3,9 @@ $breakpoint-phone: 640px;
 .sky {
   height: 100vh;
   width: 100%;
-  background: rgb(9,76,114);
-	background: radial-gradient(ellipse at bottom,  rgb(9,16,44) 0%,rgb(1,41,63) 100%);
+	// background: rgb(9,76,114);
+	// background-color: black;
+	// background: radial-gradient(ellipse at bottom,  rgb(9,16,44) 0%,rgb(1,41,63) 100%);
 }
 
 @function box-shadow($stars) {
@@ -158,7 +159,7 @@ svg circle {
 .planet {
 	width: 7em;
 	height: 7em;
-	position: relative;
+	position: absolute;
 	cursor: url(imgs/ovni.png), auto;
 
 	@media (max-width: $breakpoint-phone) {

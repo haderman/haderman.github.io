@@ -12,15 +12,16 @@
             "elm/http": "2.0.0",
             "elm/json": "1.1.2",
             "elm/svg": "1.0.1",
+            "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm-explorations/markdown": "1.0.0",
+            "mdgriffith/elm-style-animation": "4.0.0",
             "mdgriffith/elm-ui": "1.1.0",
             "ohanhi/keyboard": "1.0.0"
         },
         "indirect": {
             "elm/bytes": "1.0.7",
             "elm/file": "1.0.1",
-            "elm/time": "1.0.0",
             "elm/virtual-dom": "1.0.0"
         }
     },
