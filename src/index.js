@@ -14,4 +14,4 @@ Elm.Main.init({
   flags: { me, jobs, screen }
 });
 
-registerServiceWorker();
+// registerServiceWorker();
