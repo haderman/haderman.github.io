@@ -5251,7 +5251,9 @@ var author$project$Page$Home$Screen = F2(
 	function (width, height) {
 		return {height: height, width: width};
 	});
-var author$project$Page$Home$Universe = {$: 'Universe'};
+var author$project$Page$Home$InSpace = {$: 'InSpace'};
+var author$project$Page$Home$Desert = {$: 'Desert'};
+var author$project$Page$Home$Forest = {$: 'Forest'};
 var mdgriffith$elm_style_animation$Animation$Model$Spring = function (a) {
 	return {$: 'Spring', a: a};
 };
@@ -5267,27 +5269,6 @@ var mdgriffith$elm_style_animation$Animation$initMotion = F2(
 			velocity: 0
 		};
 	});
-var mdgriffith$elm_style_animation$Animation$Model$ColorProperty = F5(
-	function (a, b, c, d, e) {
-		return {$: 'ColorProperty', a: a, b: b, c: c, d: d, e: e};
-	});
-var mdgriffith$elm_style_animation$Animation$customColor = F2(
-	function (name, _n0) {
-		var red = _n0.red;
-		var green = _n0.green;
-		var blue = _n0.blue;
-		var alpha = _n0.alpha;
-		return A5(
-			mdgriffith$elm_style_animation$Animation$Model$ColorProperty,
-			name,
-			A2(mdgriffith$elm_style_animation$Animation$initMotion, red, ''),
-			A2(mdgriffith$elm_style_animation$Animation$initMotion, green, ''),
-			A2(mdgriffith$elm_style_animation$Animation$initMotion, blue, ''),
-			A2(mdgriffith$elm_style_animation$Animation$initMotion, alpha, ''));
-	});
-var mdgriffith$elm_style_animation$Animation$backgroundColor = function (c) {
-	return A2(mdgriffith$elm_style_animation$Animation$customColor, 'background-color', c);
-};
 var mdgriffith$elm_style_animation$Animation$Model$Property = F2(
 	function (a, b) {
 		return {$: 'Property', a: a, b: b};
@@ -5377,6 +5358,10 @@ var mdgriffith$elm_style_animation$Animation$defaultInterpolationByProperty = fu
 var mdgriffith$elm_style_animation$Animation$Model$AngleProperty = F2(
 	function (a, b) {
 		return {$: 'AngleProperty', a: a, b: b};
+	});
+var mdgriffith$elm_style_animation$Animation$Model$ColorProperty = F5(
+	function (a, b, c, d, e) {
+		return {$: 'ColorProperty', a: a, b: b, c: c, d: d, e: e};
 	});
 var mdgriffith$elm_style_animation$Animation$Model$ExactProperty = F2(
 	function (a, b) {
@@ -6028,39 +6013,69 @@ var mdgriffith$elm_style_animation$Animation$translate = F2(
 				valY,
 				mdgriffith$elm_style_animation$Animation$lengthUnitName(len2)));
 	});
-var mdgriffith$elm_style_animation$Animation$length = F3(
-	function (name, val, unit) {
-		return A2(
-			mdgriffith$elm_style_animation$Animation$Model$Property,
+var author$project$Page$Home$initPlanets = function () {
+	var forestPlanet = {
+		ecosystem: author$project$Page$Home$Forest,
+		position: _Utils_Tuple2(30, 30),
+		style: mdgriffith$elm_style_animation$Animation$style(
+			_List_fromArray(
+				[
+					mdgriffith$elm_style_animation$Animation$opacity(1.0),
+					A2(
+					mdgriffith$elm_style_animation$Animation$translate,
+					mdgriffith$elm_style_animation$Animation$px(0),
+					mdgriffith$elm_style_animation$Animation$px(0))
+				]))
+	};
+	var desertPlanet = {
+		ecosystem: author$project$Page$Home$Desert,
+		position: _Utils_Tuple2(130, 260),
+		style: mdgriffith$elm_style_animation$Animation$style(
+			_List_fromArray(
+				[
+					mdgriffith$elm_style_animation$Animation$opacity(1.0),
+					A2(
+					mdgriffith$elm_style_animation$Animation$translate,
+					mdgriffith$elm_style_animation$Animation$px(0),
+					mdgriffith$elm_style_animation$Animation$px(0))
+				]))
+	};
+	return _List_fromArray(
+		[forestPlanet, desertPlanet]);
+}();
+var mdgriffith$elm_style_animation$Animation$customColor = F2(
+	function (name, _n0) {
+		var red = _n0.red;
+		var green = _n0.green;
+		var blue = _n0.blue;
+		var alpha = _n0.alpha;
+		return A5(
+			mdgriffith$elm_style_animation$Animation$Model$ColorProperty,
 			name,
-			A2(mdgriffith$elm_style_animation$Animation$initMotion, val, unit));
+			A2(mdgriffith$elm_style_animation$Animation$initMotion, red, ''),
+			A2(mdgriffith$elm_style_animation$Animation$initMotion, green, ''),
+			A2(mdgriffith$elm_style_animation$Animation$initMotion, blue, ''),
+			A2(mdgriffith$elm_style_animation$Animation$initMotion, alpha, ''));
 	});
-var mdgriffith$elm_style_animation$Animation$width = function (_n0) {
-	var val = _n0.a;
-	var len = _n0.b;
-	return A3(
-		mdgriffith$elm_style_animation$Animation$length,
-		'width',
-		val,
-		mdgriffith$elm_style_animation$Animation$lengthUnitName(len));
+var mdgriffith$elm_style_animation$Animation$backgroundColor = function (c) {
+	return A2(mdgriffith$elm_style_animation$Animation$customColor, 'background-color', c);
 };
 var author$project$Page$Home$initModel = F2(
 	function (title, screen) {
 		return {
-			place: author$project$Page$Home$Universe,
-			screen: screen,
-			sky: mdgriffith$elm_style_animation$Animation$style(
+			background: mdgriffith$elm_style_animation$Animation$style(
 				_List_fromArray(
 					[
 						mdgriffith$elm_style_animation$Animation$backgroundColor(
 						{alpha: 1.0, blue: 0, green: 0, red: 0})
 					])),
+			planets: author$project$Page$Home$initPlanets,
+			screen: screen,
+			state: author$project$Page$Home$InSpace,
 			style: mdgriffith$elm_style_animation$Animation$style(
 				_List_fromArray(
 					[
 						mdgriffith$elm_style_animation$Animation$opacity(1.0),
-						mdgriffith$elm_style_animation$Animation$width(
-						mdgriffith$elm_style_animation$Animation$px(140)),
 						A2(
 						mdgriffith$elm_style_animation$Animation$translate,
 						mdgriffith$elm_style_animation$Animation$px(0),
@@ -7263,7 +7278,16 @@ var author$project$Page$Home$subscriptions = function (model) {
 				mdgriffith$elm_style_animation$Animation$subscription,
 				author$project$Page$Home$Animate,
 				_List_fromArray(
-					[model.sky]))
+					[model.background])),
+				A2(
+				mdgriffith$elm_style_animation$Animation$subscription,
+				author$project$Page$Home$Animate,
+				A2(
+					elm$core$List$map,
+					function (p) {
+						return p.style;
+					},
+					model.planets))
 			]));
 };
 var author$project$Main$subscriptions = function (model) {
@@ -7278,21 +7302,17 @@ var author$project$Main$subscriptions = function (model) {
 		return elm$core$Platform$Sub$none;
 	}
 };
-var author$project$Page$Home$OnPlace = function (a) {
-	return {$: 'OnPlace', a: a};
+var author$project$Page$Home$Inside = function (a) {
+	return {$: 'Inside', a: a};
 };
-var author$project$Page$Home$Planet = {$: 'Planet'};
-var author$project$Page$Home$skyColor = function (place) {
-	if (place.$ === 'Universe') {
-		return mdgriffith$elm_style_animation$Animation$backgroundColor(
-			{alpha: 1.0, blue: 0, green: 0, red: 0});
-	} else {
+var author$project$Page$Home$backgroundColor = function (eco) {
+	if (eco.$ === 'Forest') {
 		return mdgriffith$elm_style_animation$Animation$backgroundColor(
 			{alpha: 1.0, blue: 255, green: 180, red: 0});
+	} else {
+		return mdgriffith$elm_style_animation$Animation$backgroundColor(
+			{alpha: 1.0, blue: 59, green: 185, red: 246});
 	}
-};
-var elm$core$Basics$negate = function (n) {
-	return -n;
 };
 var elm$core$List$drop = F2(
 	function (n, list) {
@@ -7617,6 +7637,9 @@ var elm$core$List$filterMap = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
@@ -8893,75 +8916,43 @@ var mdgriffith$elm_style_animation$Animation$update = F2(
 	function (tick, animation) {
 		return A2(mdgriffith$elm_style_animation$Animation$Model$updateAnimation, tick, animation).a;
 	});
-var mdgriffith$elm_style_animation$Animation$Model$Send = function (a) {
-	return {$: 'Send', a: a};
-};
-var mdgriffith$elm_style_animation$Animation$Messenger$send = function (msg) {
-	return mdgriffith$elm_style_animation$Animation$Model$Send(msg);
-};
 var mdgriffith$elm_style_animation$Animation$Messenger$update = F2(
 	function (tick, animation) {
 		return A2(mdgriffith$elm_style_animation$Animation$Model$updateAnimation, tick, animation);
 	});
 var author$project$Page$Home$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'ChangePlace':
-				var place = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							sky: A2(
-								mdgriffith$elm_style_animation$Animation$interrupt,
-								_List_fromArray(
-									[
-										mdgriffith$elm_style_animation$Animation$to(
-										_List_fromArray(
-											[
-												author$project$Page$Home$skyColor(author$project$Page$Home$Planet)
-											]))
-									]),
-								model.sky),
-							style: A2(
-								mdgriffith$elm_style_animation$Animation$interrupt,
-								_List_fromArray(
-									[
-										mdgriffith$elm_style_animation$Animation$to(
-										_List_fromArray(
-											[
-												mdgriffith$elm_style_animation$Animation$width(
-												mdgriffith$elm_style_animation$Animation$px(model.screen.width * 3)),
-												A2(
-												mdgriffith$elm_style_animation$Animation$translate,
-												mdgriffith$elm_style_animation$Animation$px(model.screen.width * (-1)),
-												mdgriffith$elm_style_animation$Animation$px(model.screen.height - (model.screen.height * 0.4))),
-												mdgriffith$elm_style_animation$Animation$opacity(0.5)
-											])),
-										mdgriffith$elm_style_animation$Animation$Messenger$send(
-										author$project$Page$Home$OnPlace(place))
-									]),
-								model.style)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'OnPlace':
-				var place = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{place: author$project$Page$Home$Planet}),
-					elm$core$Platform$Cmd$none);
-			default:
-				var animMsg = msg.a;
-				var newSky = A2(mdgriffith$elm_style_animation$Animation$update, animMsg, model.sky);
-				var _n1 = A2(mdgriffith$elm_style_animation$Animation$Messenger$update, animMsg, model.style);
-				var newStyle = _n1.a;
-				var cmd = _n1.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{sky: newSky, style: newStyle}),
-					cmd);
+		if (msg.$ === 'OnClick') {
+			var planet = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						background: A2(
+							mdgriffith$elm_style_animation$Animation$interrupt,
+							_List_fromArray(
+								[
+									mdgriffith$elm_style_animation$Animation$to(
+									_List_fromArray(
+										[
+											author$project$Page$Home$backgroundColor(planet.ecosystem)
+										]))
+								]),
+							model.background),
+						state: author$project$Page$Home$Inside(planet)
+					}),
+				elm$core$Platform$Cmd$none);
+		} else {
+			var animMsg = msg.a;
+			var newBackground = A2(mdgriffith$elm_style_animation$Animation$update, animMsg, model.background);
+			var _n1 = A2(mdgriffith$elm_style_animation$Animation$Messenger$update, animMsg, model.style);
+			var newStyle = _n1.a;
+			var cmd = _n1.b;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{background: newBackground, style: newStyle}),
+				cmd);
 		}
 	});
 var elm$browser$Browser$Navigation$load = _Browser_load;
@@ -15106,114 +15097,20 @@ var author$project$Page$Blog$view = function (model) {
 		title: model.title
 	};
 };
-var author$project$Page$Home$viewClouds = A2(
-	elm$html$Html$div,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$class('clouds')
-		]),
-	_List_Nil);
-var elm$url$Url$Builder$toQueryPair = function (_n0) {
-	var key = _n0.a;
-	var value = _n0.b;
-	return key + ('=' + value);
+var author$project$Page$Home$OnClick = function (a) {
+	return {$: 'OnClick', a: a};
 };
-var elm$url$Url$Builder$toQuery = function (parameters) {
-	if (!parameters.b) {
-		return '';
-	} else {
-		return '?' + A2(
-			elm$core$String$join,
-			'&',
-			A2(elm$core$List$map, elm$url$Url$Builder$toQueryPair, parameters));
-	}
+var author$project$Page$Home$left = function (position) {
+	return function (str) {
+		return str + 'px';
+	}(
+		elm$core$String$fromInt(position.a));
 };
-var elm$url$Url$Builder$absolute = F2(
-	function (pathSegments, parameters) {
-		return '/' + (A2(elm$core$String$join, '/', pathSegments) + elm$url$Url$Builder$toQuery(parameters));
-	});
-var author$project$Utils$Href$toAbout = A2(
-	elm$url$Url$Builder$absolute,
-	_List_fromArray(
-		['about']),
-	_List_Nil);
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
-var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var author$project$Page$Home$viewAboutPlanet = A2(
-	elm$html$Html$a,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$class('planet planet-about'),
-			elm$html$Html$Attributes$href(author$project$Utils$Href$toAbout)
-		]),
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$svg,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$viewBox('0 0 250 250'),
-					elm$svg$Svg$Attributes$class('planet-A')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('121'),
-							elm$svg$Svg$Attributes$cy('121'),
-							elm$svg$Svg$Attributes$r('109')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('38 105 42 110 41 120 44 126 48 126 56 129 59 136 64 136 69 133 72 134 74 139 80 147 86 146 94 138 97 132 106 135 116 135 125 132 141 132 149 136 159 136 159 124 150 117 138 102 138 92 147 84 141 76 131 75 120 72 103 71 89 63 75 66 80 73 88 73 86 79 74 91 60 96 62 91 53 89 41 92 35 97')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('142 159 132 165 132 172 127 172 125 176 129 182 135 182 138 179 146 181 150 181 153 190 161 192 166 191 166 186 162 187 157 187 157 180 159 174 155 167 152 160 143 154 136 154 140 160')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('221 164 226 153 229 139 230 131 231 120 230 104 224 88 219 88 215 89 211 97 217 97 219 91 221 97 223 104 219 106 204 111 204 128 211 134 214 133 214 128 211 123 213 115 223 118 225 132 220 139 218 146 215 154 204 155 196 162 197 176 209 173 216 169')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('99 15 113 12 122 12 139 13 150 16 160 19 172 24 190 35 207 52 199 52 191 60 181 59 171 55 171 52 177 53 177 49 172 40 160 41 149 41 145 46 124 45 112 49 98 46 94 53 90 52 90 44 97 38 111 36 121 37 127 32 134 29 125 19 103 19 88 25 74 30 64 36 60 57 51 61 39 58 31 67 27 64 37 49 53 34 75 21 96 14')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('33 188 45 190 53 185 55 175 61 168 68 168 81 165 78 175 73 177 73 185 74 203 70 207 72 214 72 218 59 212 44 201')
-						]),
-					_List_Nil)
-				])),
-			author$project$Page$Home$viewClouds
-		]));
-var author$project$Page$Home$ChangePlace = function (a) {
-	return {$: 'ChangePlace', a: a};
+var author$project$Page$Home$top = function (position) {
+	return function (str) {
+		return str + 'px';
+	}(
+		elm$core$String$fromInt(position.b));
 };
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -15232,6 +15129,15 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
+var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var mdgriffith$elm_style_animation$Animation$Render$iePrefix = '-ms-';
 var mdgriffith$elm_style_animation$Animation$Render$webkitPrefix = '-webkit-';
 var mdgriffith$elm_style_animation$Animation$Render$prefix = function (stylePair) {
@@ -15748,16 +15654,24 @@ var mdgriffith$elm_style_animation$Animation$Render$render = function (animation
 	return _Utils_ap(styleAttr, otherAttrs);
 };
 var mdgriffith$elm_style_animation$Animation$render = mdgriffith$elm_style_animation$Animation$Render$render;
-var author$project$Page$Home$viewAnimationPlanet = function (model) {
+var author$project$Page$Home$viewDesertPlanet = function (planet) {
 	return A2(
 		elm$html$Html$div,
 		_Utils_ap(
-			mdgriffith$elm_style_animation$Animation$render(model.style),
+			mdgriffith$elm_style_animation$Animation$render(planet.style),
 			_List_fromArray(
 				[
 					elm$html$Html$Events$onClick(
-					author$project$Page$Home$ChangePlace(author$project$Page$Home$Planet)),
-					elm$html$Html$Attributes$class('planet planet-about')
+					author$project$Page$Home$OnClick(planet)),
+					elm$html$Html$Attributes$class('planet desert-planet'),
+					A2(
+					elm$html$Html$Attributes$style,
+					'top',
+					author$project$Page$Home$top(planet.position)),
+					A2(
+					elm$html$Html$Attributes$style,
+					'left',
+					author$project$Page$Home$left(planet.position))
 				])),
 		_List_fromArray(
 			[
@@ -15765,8 +15679,69 @@ var author$project$Page$Home$viewAnimationPlanet = function (model) {
 				elm$svg$Svg$svg,
 				_List_fromArray(
 					[
-						elm$svg$Svg$Attributes$viewBox('0 0 250 250'),
-						elm$svg$Svg$Attributes$class('planet-A')
+						elm$svg$Svg$Attributes$viewBox('0 0 250 250')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$svg$Svg$circle,
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$cx('121'),
+								elm$svg$Svg$Attributes$cy('121'),
+								elm$svg$Svg$Attributes$r('109')
+							]),
+						_List_Nil),
+						A2(
+						elm$svg$Svg$polygon,
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$points('30.5725 60.5344 40.4962 52.5954 47.4427 54.5802 51.4122 51.6031 57.3664 42.6718 66.2977 37.7099 75.229 37.7099 78.2061 31.7557 87.1374 30.7634 101.031 35.7252 110.954 35.7252 109.962 52.5954 105 59.542 98.0534 61.5267 85.1527 74.4275 82.1756 79.3893 77.2137 93.2824 62.3282 96.2595 58.3588 90.3053 49.4275 95.2672 31.5649 95.2672 28.5878 103.206 21.6412 112.137 11.7176 113.13 13.7023 93.2824 22.6336 74.4275 26.6031 67.4809')
+							]),
+						_List_Nil),
+						A2(
+						elm$svg$Svg$polygon,
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$points('166.527 21.8321 164.542 30.7634 165.534 41.6794 164.542 53.5878 161.565 58.5496 158.588 65.4962 155.611 72.4427 151.641 77.4046 147.672 83.3588 146.679 90.3053 140.725 98.2443 135.763 111.145 124.847 112.137 121.87 116.107 110.954 120.076 101.031 119.084 95.0763 128.015 95.0763 133.969 95.0763 142.901 100.038 147.863 107.977 156.794 111.947 162.748 122.863 161.756 136.756 161.756 151.641 151.832 161.565 145.878 167.519 136.947 173.473 126.031 182.405 120.076 189.351 121.069 191.336 117.099 196.298 104.198 202.252 92.2901 205.229 80.3817 215.153 79.3893 214.16 70.458 210.191 61.5267 210.191 56.5649 198.282 42.6718 181.412 28.7786 167.519 20.8397')
+							]),
+						_List_Nil),
+						A2(
+						elm$svg$Svg$polygon,
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$points('46.4504 202.443 65.3053 207.405 72.2519 211.374 76.2214 212.366 78.2061 209.389 87.1374 209.389 91.1069 211.374 98.0534 211.374 100.038 206.412 105.992 205.42 112.939 205.42 119.885 201.45 134.771 202.443 148.664 202.443 154.618 196.489 168.511 185.573 180.42 178.626 188.359 165.725 193.321 160.763 201.26 161.756 203.244 170.687 199.275 183.588 188.359 188.55 183.397 198.473 172.481 198.473 169.504 204.427 164.542 209.389 158.588 213.359 149.656 219.313 135.763 219.313 129.809 225.267 123.855 229.237 112.939 230.229 95.0763 228.244 77.2137 222.29 61.3359 213.359')
+							]),
+						_List_Nil)
+					]))
+			]));
+};
+var author$project$Page$Home$viewForestPlanet = function (planet) {
+	return A2(
+		elm$html$Html$div,
+		_Utils_ap(
+			mdgriffith$elm_style_animation$Animation$render(planet.style),
+			_List_fromArray(
+				[
+					elm$html$Html$Events$onClick(
+					author$project$Page$Home$OnClick(planet)),
+					elm$html$Html$Attributes$class('planet forest-planet'),
+					A2(
+					elm$html$Html$Attributes$style,
+					'top',
+					author$project$Page$Home$top(planet.position)),
+					A2(
+					elm$html$Html$Attributes$style,
+					'left',
+					author$project$Page$Home$left(planet.position))
+				])),
+		_List_fromArray(
+			[
+				A2(
+				elm$svg$Svg$svg,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$viewBox('0 0 250 250')
 					]),
 				_List_fromArray(
 					[
@@ -15814,227 +15789,284 @@ var author$project$Page$Home$viewAnimationPlanet = function (model) {
 								elm$svg$Svg$Attributes$points('33 188 45 190 53 185 55 175 61 168 68 168 81 165 78 175 73 177 73 185 74 203 70 207 72 214 72 218 59 212 44 201')
 							]),
 						_List_Nil)
-					])),
-				author$project$Page$Home$viewClouds
+					]))
 			]));
 };
-var author$project$Page$Home$viewExperiencePlanet = A2(
-	elm$html$Html$div,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$class('planet planet-experience')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$svg,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$viewBox('0 0 250 250'),
-					elm$svg$Svg$Attributes$class('planet-B')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('121'),
-							elm$svg$Svg$Attributes$cy('121'),
-							elm$svg$Svg$Attributes$r('109')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('30.5725 60.5344 40.4962 52.5954 47.4427 54.5802 51.4122 51.6031 57.3664 42.6718 66.2977 37.7099 75.229 37.7099 78.2061 31.7557 87.1374 30.7634 101.031 35.7252 110.954 35.7252 109.962 52.5954 105 59.542 98.0534 61.5267 85.1527 74.4275 82.1756 79.3893 77.2137 93.2824 62.3282 96.2595 58.3588 90.3053 49.4275 95.2672 31.5649 95.2672 28.5878 103.206 21.6412 112.137 11.7176 113.13 13.7023 93.2824 22.6336 74.4275 26.6031 67.4809')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('166.527 21.8321 164.542 30.7634 165.534 41.6794 164.542 53.5878 161.565 58.5496 158.588 65.4962 155.611 72.4427 151.641 77.4046 147.672 83.3588 146.679 90.3053 140.725 98.2443 135.763 111.145 124.847 112.137 121.87 116.107 110.954 120.076 101.031 119.084 95.0763 128.015 95.0763 133.969 95.0763 142.901 100.038 147.863 107.977 156.794 111.947 162.748 122.863 161.756 136.756 161.756 151.641 151.832 161.565 145.878 167.519 136.947 173.473 126.031 182.405 120.076 189.351 121.069 191.336 117.099 196.298 104.198 202.252 92.2901 205.229 80.3817 215.153 79.3893 214.16 70.458 210.191 61.5267 210.191 56.5649 198.282 42.6718 181.412 28.7786 167.519 20.8397')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('46.4504 202.443 65.3053 207.405 72.2519 211.374 76.2214 212.366 78.2061 209.389 87.1374 209.389 91.1069 211.374 98.0534 211.374 100.038 206.412 105.992 205.42 112.939 205.42 119.885 201.45 134.771 202.443 148.664 202.443 154.618 196.489 168.511 185.573 180.42 178.626 188.359 165.725 193.321 160.763 201.26 161.756 203.244 170.687 199.275 183.588 188.359 188.55 183.397 198.473 172.481 198.473 169.504 204.427 164.542 209.389 158.588 213.359 149.656 219.313 135.763 219.313 129.809 225.267 123.855 229.237 112.939 230.229 95.0763 228.244 77.2137 222.29 61.3359 213.359')
-						]),
-					_List_Nil)
-				])),
-			author$project$Page$Home$viewClouds
-		]));
-var author$project$Page$Home$viewPlanets = function (model) {
-	return A2(
+var author$project$Page$Home$viewUniverse = function (model) {
+	var stars = A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('absolute')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('stars small')
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('stars medium')
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('stars large')
+					]),
+				_List_Nil)
+			]));
+	var planet = function (p) {
+		var _n0 = p.ecosystem;
+		if (_n0.$ === 'Forest') {
+			return author$project$Page$Home$viewForestPlanet(p);
+		} else {
+			return author$project$Page$Home$viewDesertPlanet(p);
+		}
+	};
+	var planets = A2(
 		elm$html$Html$div,
 		_List_fromArray(
 			[
 				elm$html$Html$Attributes$class('planets-container')
 			]),
+		A2(elm$core$List$map, planet, model.planets));
+	return _List_fromArray(
+		[stars, planets]);
+};
+var author$project$Page$Home$viewDesertWorld = function () {
+	var clouds = A2(
+		elm$html$Html$div,
 		_List_fromArray(
 			[
-				author$project$Page$Home$viewAboutPlanet,
-				author$project$Page$Home$viewExperiencePlanet,
-				author$project$Page$Home$viewAnimationPlanet(model)
+				elm$html$Html$Attributes$class('background')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x1')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x2')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x3')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x4')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x5')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					]))
 			]));
-};
-var author$project$Page$Home$viewPlace = function (model) {
-	var _n0 = model.place;
-	if (_n0.$ === 'Universe') {
-		return author$project$Page$Home$viewPlanets(model);
+	return _List_fromArray(
+		[
+			clouds,
+			A2(elm$html$Html$div, _List_Nil, _List_Nil)
+		]);
+}();
+var author$project$Page$Home$viewForestWorld = function () {
+	var clouds = A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('background')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x1')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x2')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x3')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x4')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('x5')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('cloud')
+							]),
+						_List_Nil)
+					]))
+			]));
+	return _List_fromArray(
+		[
+			clouds,
+			A2(elm$html$Html$div, _List_Nil, _List_Nil)
+		]);
+}();
+var author$project$Page$Home$viewWorld = function (planet) {
+	var _n0 = planet.ecosystem;
+	if (_n0.$ === 'Forest') {
+		return author$project$Page$Home$viewForestWorld;
 	} else {
-		return author$project$Page$Home$viewPlanets(model);
-	}
-};
-var author$project$Page$Home$viewSky = function (place) {
-	if (place.$ === 'Universe') {
-		return A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('absolute')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('stars small')
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('stars medium')
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('stars large')
-						]),
-					_List_Nil)
-				]));
-	} else {
-		return A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('background')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('x1')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('cloud')
-								]),
-							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('x2')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('cloud')
-								]),
-							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('x3')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('cloud')
-								]),
-							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('x4')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('cloud')
-								]),
-							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('x5')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('cloud')
-								]),
-							_List_Nil)
-						]))
-				]));
+		return author$project$Page$Home$viewDesertWorld;
 	}
 };
 var author$project$Page$Home$viewContent = function (model) {
-	return mdgriffith$elm_ui$Element$html(
-		A2(
-			elm$html$Html$div,
-			_Utils_ap(
-				mdgriffith$elm_style_animation$Animation$render(model.sky),
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('sky')
-					])),
+	var content = function () {
+		var _n0 = model.state;
+		if (_n0.$ === 'InSpace') {
+			return author$project$Page$Home$viewUniverse(model);
+		} else {
+			var planet = _n0.a;
+			return author$project$Page$Home$viewWorld(planet);
+		}
+	}();
+	return A2(
+		elm$html$Html$div,
+		_Utils_ap(
+			mdgriffith$elm_style_animation$Animation$render(model.background),
 			_List_fromArray(
 				[
-					author$project$Page$Home$viewSky(model.place),
-					author$project$Page$Home$viewPlace(model)
-				])));
+					elm$html$Html$Attributes$class('sky')
+				])),
+		content);
 };
 var author$project$Page$Home$view = function (model) {
 	return {
 		kids: _List_fromArray(
 			[
-				author$project$Page$Home$viewContent(model)
+				mdgriffith$elm_ui$Element$html(
+				author$project$Page$Home$viewContent(model))
 			]),
 		title: model.title
 	};
@@ -16164,6 +16196,30 @@ var author$project$Skeleton$isActive = F2(
 	function (page, page_) {
 		return _Utils_eq(page, page_);
 	});
+var elm$url$Url$Builder$toQueryPair = function (_n0) {
+	var key = _n0.a;
+	var value = _n0.b;
+	return key + ('=' + value);
+};
+var elm$url$Url$Builder$toQuery = function (parameters) {
+	if (!parameters.b) {
+		return '';
+	} else {
+		return '?' + A2(
+			elm$core$String$join,
+			'&',
+			A2(elm$core$List$map, elm$url$Url$Builder$toQueryPair, parameters));
+	}
+};
+var elm$url$Url$Builder$absolute = F2(
+	function (pathSegments, parameters) {
+		return '/' + (A2(elm$core$String$join, '/', pathSegments) + elm$url$Url$Builder$toQuery(parameters));
+	});
+var author$project$Utils$Href$toAbout = A2(
+	elm$url$Url$Builder$absolute,
+	_List_fromArray(
+		['about']),
+	_List_Nil);
 var author$project$Utils$Href$toHome = A2(elm$url$Url$Builder$absolute, _List_Nil, _List_Nil);
 var author$project$Skeleton$viewHeader = function (page) {
 	var navLink = F3(
