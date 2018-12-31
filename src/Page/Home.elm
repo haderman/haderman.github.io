@@ -24,6 +24,8 @@ import Json.Decode as Decode exposing (Decoder, Value, map2, fail, field, float)
 
 import Skeleton
 import Utils.Href exposing (toAbout)
+import World.Forest as Forest
+import World.Desert as Desert
 
 
 
@@ -38,67 +40,28 @@ type alias Screen =
 
 type alias Model =
     { title : String
-    , state : State
-    , planets : List Planet
     , style : Animation.Messenger.State Msg
     , screen : Screen
     , background : Animation.State
+    , world : World 
     }
 
 
-type State
-    = Inside Planet
-    | InSpace
+type World
+    = Universe
+    | Forest Forest.Model
+    | Desert Desert.Model
 
 
-type alias Planet =
-    { position : Position
-    , ecosystem : Ecosystem
-    , style : Animation.Messenger.State Msg
-    }
-
-
-type alias Position =
-    ( Int, Int )
-
-
-type Ecosystem
-    = Forest
-    | Desert
-
-
-initPlanets : List Planet
-initPlanets =
-    let
-        forestPlanet =
-            { position = ( 30, 30 )
-            , ecosystem = Forest
-            , style =
-                Animation.style
-                    [ Animation.opacity 1.0
-                    , Animation.translate (px 0) (px 0)
-                    ]
-            }
-
-        desertPlanet =
-            { position = ( 130, 260 )
-            , ecosystem = Desert
-            , style =
-                Animation.style
-                    [ Animation.opacity 1.0
-                    , Animation.translate (px 0) (px 0)
-                    ]
-            }
-    in
-    [ forestPlanet, desertPlanet ]
-    
+type Planet
+    = ForestPlanet
+    | DesertPlanet
 
 
 initModel : String -> Screen -> Model
 initModel title screen =
     { title = title
-    , state = InSpace
-    , planets = initPlanets
+    , world = Universe
     , style =
         Animation.style
             [ Animation.opacity 1.0
@@ -135,24 +98,31 @@ init value title =
 
 type Msg
     = OnClick Planet
+    | ForestMsg Forest.Msg
+    | DesertMsg Desert.Msg
     | Animate Animation.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
+update message model =
+    case message of
         OnClick planet ->
-            ({ model
-                | state =
-                    Inside planet 
-                , background =
+            let
+                ( newModel, cmd ) =
+                    case planet of
+                        ForestPlanet -> stepForest model (Forest.init)  
+                        DesertPlanet -> stepDesert model (Desert.init)  
+                        
+            in
+            ({ newModel
+                | background =
                     Animation.interrupt
                         [ Animation.to
-                            [ backgroundColor planet.ecosystem ]
+                            [ backgroundColor newModel.world ]
                         ]
                         model.background
             }
-            , Cmd.none
+            , cmd
             )
 
         Animate animMsg ->
@@ -170,17 +140,43 @@ update msg model =
             , cmd
             )
 
+        ForestMsg msg ->
+            case model.world of
+                Forest forest -> stepForest model (Forest.update msg forest) 
+                _             -> ( model, Cmd.none )
+                
+        DesertMsg msg ->
+            case model.world of
+                Desert desert -> stepDesert model (Desert.update msg desert) 
+                _             -> ( model, Cmd.none )
 
 
+stepForest : Model -> ( Forest.Model, Cmd Forest.Msg ) -> ( Model, Cmd Msg)
+stepForest model (forest, cmds) =
+    ( { model | world = Forest forest }
+    , Cmd.map ForestMsg cmds
+    )
 
-backgroundColor : Ecosystem -> Animation.Property
-backgroundColor eco =
-    case eco of
-        Forest ->
+
+stepDesert : Model -> ( Desert.Model, Cmd Desert.Msg ) -> ( Model, Cmd Msg)
+stepDesert model (desert, cmds) =
+    ( { model | world = Desert desert }
+    , Cmd.map DesertMsg cmds
+    )
+
+
+backgroundColor : World -> Animation.Property
+backgroundColor world =
+    case world of
+        Forest _ ->
             Animation.backgroundColor { red = 0, green = 180, blue = 255, alpha = 1.0 }
         
-        Desert ->
+        Desert _ ->
             Animation.backgroundColor { red = 246, green = 185, blue = 59, alpha = 1.0 }
+
+        Universe ->
+            Animation.backgroundColor { red = 0, green = 0, blue = 0, alpha = 1.0 }
+
 
 
 -- SUBSCRIPTIONS
@@ -188,13 +184,18 @@ backgroundColor eco =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Animation.subscription Animate [ model.style ]
-        , Animation.subscription Animate [ model.background ]
-        , Animation.subscription Animate <|
-            List.map (\p -> p.style) model.planets
-        ]
-    -- Animation.subscription Animate [ model.style ]
+    case model.world of
+        Universe ->
+            Sub.batch
+                [ Animation.subscription Animate [ model.style ]
+                , Animation.subscription Animate [ model.background ]
+                ]
+    
+        Forest forest ->
+            Sub.map ForestMsg (Forest.subscriptions forest)
+
+        Desert desert ->
+            Sub.map DesertMsg (Desert.subscriptions desert)
 
 
 
@@ -210,24 +211,19 @@ view model =
 
 viewContent : Model -> Html Msg
 viewContent model =
-    let
-        content =
-            case model.state of
-                InSpace ->
-                    viewUniverse model
-            
-                Inside planet ->
-                    viewWorld planet
-                    
-    in
-    div
-        (Animation.render model.background
-            ++ [ Html.Attributes.class "sky" ]
-        )
-        content
+    case model.world of
+        Universe ->
+            viewUniverse model
+    
+        Forest forestModel ->
+            Html.map ForestMsg <| Forest.view forestModel
+
+        Desert desertModel ->
+            Html.map DesertMsg <| Desert.view desertModel
+                
 
 
-viewUniverse : Model -> List (Html Msg)
+viewUniverse : Model -> Html Msg
 viewUniverse model =
     let
         stars =
@@ -239,31 +235,26 @@ viewUniverse model =
         
         planets =
             div [ Html.Attributes.class "planets-container" ]
-                <|
-                List.map planet model.planets
-
-        planet p =
-            case p.ecosystem of
-                Forest ->
-                    viewForestPlanet p
-            
-                Desert ->
-                    viewDesertPlanet p
+                [ viewForestPlanet
+                , viewDesertPlanet
+                ]
 
     in
-        [ stars, planets ]
+        div
+            (Animation.render model.background
+                ++ [ Html.Attributes.class "sky" ]
+            )
+            [ stars, planets ]
 
 
-viewForestPlanet : Planet -> Html Msg
-viewForestPlanet planet =
+viewForestPlanet : Html Msg
+viewForestPlanet =
     div
-        (Animation.render planet.style
-            ++ [ onClick (OnClick planet)
-               , Html.Attributes.class "planet forest-planet"
-               , Html.Attributes.style "top" <| top planet.position
-               , Html.Attributes.style "left" <| left planet.position
-               ]
-        )
+        [ onClick (OnClick ForestPlanet)
+        , Html.Attributes.class "planet forest-planet"
+        , Html.Attributes.style "top" "30px"
+        , Html.Attributes.style "left" "30px"
+        ]
         [ svg
             [ viewBox "0 0 250 250"
             ]
@@ -291,16 +282,14 @@ viewForestPlanet planet =
         ]
 
 
-viewDesertPlanet : Planet -> Html Msg
-viewDesertPlanet planet =
+viewDesertPlanet : Html Msg
+viewDesertPlanet =
     div
-        (Animation.render planet.style
-            ++ [ onClick (OnClick planet)
-               , Html.Attributes.class "planet desert-planet"
-               , Html.Attributes.style "top" <| top planet.position
-               , Html.Attributes.style "left" <| left planet.position
-               ]
-        )
+        [ onClick (OnClick DesertPlanet)
+        , Html.Attributes.class "planet desert-planet"
+        , Html.Attributes.style "top" "260px"
+        , Html.Attributes.style "left" "160px"
+        ]
         [ svg
             [ viewBox "0 0 250 250"
             ]
@@ -321,88 +310,6 @@ viewDesertPlanet planet =
             ]
         ]
 
-
-viewWorld : Planet -> List (Html Msg)
-viewWorld planet =
-    case planet.ecosystem of
-        Forest ->
-            viewForestWorld
-    
-        Desert ->
-            viewDesertWorld
-
-
-viewForestWorld : List (Html Msg)
-viewForestWorld =
-    let
-        clouds =
-            div [ Html.Attributes.class "background" ]
-                [ div [ Html.Attributes.class "x1" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x2" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x3" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x4" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x5" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                ]
-    in
-    [ clouds
-    , div [] []
-    ]
-
-
-viewDesertWorld : List (Html Msg)
-viewDesertWorld =
-    let
-        clouds =
-            div [ Html.Attributes.class "background" ]
-                [ div [ Html.Attributes.class "x1" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x2" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x3" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x4" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                , div [ Html.Attributes.class "x5" ]
-                    [ div [ Html.Attributes.class "cloud" ] []
-                    ]
-                ]
-    in
-    [ clouds
-    , div [] []
-    ]
-
-
-
--- HELPERS
-
-
-top : Position -> String
-top position =
-    Tuple.second position
-        |> String.fromInt
-        |> \str -> str ++ "px"
-
-
-left : Position -> String
-left position =
-    Tuple.first position
-        |> String.fromInt
-        |> \str -> str ++ "px"
-       
 
 
 -- DECODERS

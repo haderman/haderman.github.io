@@ -35,7 +35,7 @@ type Msg
     = Noop
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     ( model, Cmd.none )
 
@@ -44,14 +44,14 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Skeleton.Details msg
+view : Model -> Skeleton.Details Msg
 view model =
     { title = model.title
     , kids = [ viewContent model.title ]
     }
 
 
-viewContent : String -> Element msg
+viewContent : String -> Element Msg
 viewContent title =
     column
         [ centerX

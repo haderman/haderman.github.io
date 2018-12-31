@@ -1,5 +1,6 @@
 @import 'universe.scss';
 @import 'planet.scss';
+@import 'world.scss';
 
 body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
@@ -16,6 +17,11 @@ h1 {
 img {
   margin: 20px 0;
   max-width: 200px;
+}
+
+.fill {
+  width: 100vw;
+  height: 100vh;
 }
 
 .profile-photo {
